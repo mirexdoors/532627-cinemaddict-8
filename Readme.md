@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Михаил Прокудин](https://up.htmlacademy.ru/ecmascript/8/user/532627).
-* Наставник: `Неизвестно`.
+* Наставник: Александр Тимоновский.
 
 ---
 
