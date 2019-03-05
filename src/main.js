@@ -1,5 +1,6 @@
+import getFilm from '../src/get-film.js';
 import getFilterElement from '../src/make-filter.js';
-import getFilm from '../src/make-film.js';
+import getFilmCard from '../src/make-film.js';
 
 const TOTAL_FILMS = 7;
 const RATED_FILMS = 2;
@@ -10,16 +11,7 @@ const filmListContainer = document.querySelector(`.films-list__main`);
 const topRatedFilmContainer = document.querySelector(`.films-list__top`);
 const mostCommentedFilmContainer = document.querySelector(`.films-list__commented`);
 
-const film = {
-  name: `The Assassination Of Jessie James By The Coward Robert Ford`,
-  rating: `9.8`,
-  year: `2018`,
-  duration: `1h 13m`,
-  genre: `Comedy`,
-  imgPath: `./images/posters/three-friends.jpg`,
-  description: `A priest with a haunted past and a novice on the threshold of her final vows are sent by the Vatican to investigate the death of a young nun in Romania and confront a malevolent force in the form of a demonic nun.`,
-  commentsAmount: `13`
-};
+
 
 const randomInteger = (min, max) => {
   let rand = min - 0.5 + Math.random() * (max - min + 1);
@@ -29,10 +21,10 @@ const randomInteger = (min, max) => {
 
 const onCLickFilter = () => {
   filmListContainer.innerHTML = ``;
-  let taskAmount = randomInteger(1, 5);
-  while (taskAmount) {
-    filmListContainer.insertAdjacentHTML(`beforeend`, getFilm(film.name, film.rating, film.year, film.duration, film.genre, film.imgPath, film.description, film.commentsAmount));
-    --taskAmount;
+  let filmAmount = randomInteger(1, 5);
+  while (filmAmount) {
+    filmListContainer.insertAdjacentHTML(`beforeend`, getFilmCard(getFilm()));
+    --filmAmount;
   }
 };
 
@@ -60,21 +52,21 @@ document.addEventListener(`DOMContentLoaded`, function () {
   if (filmListContainer) {
     let counter = TOTAL_FILMS;
     while (counter) {
-      filmListContainer.insertAdjacentHTML(`beforeend`, getFilm(film.name, film.rating, film.year, film.duration, film.genre, film.imgPath, film.description, film.commentsAmount));
+      filmListContainer.insertAdjacentHTML(`beforeend`, getFilmCard(getFilm()));
       --counter;
     }
   }
   if (mostCommentedFilmContainer) {
     let counter = MOST_COMMENTED_FILMS;
     while (counter) {
-      mostCommentedFilmContainer.insertAdjacentHTML(`beforeend`, getFilm(film.name, film.rating, film.year, film.duration, film.genre, film.imgPath, false, film.commentsAmount, false));
+      mostCommentedFilmContainer.insertAdjacentHTML(`beforeend`, getFilmCard(getFilm()));
       --counter;
     }
   }
   if (topRatedFilmContainer) {
     let counter = RATED_FILMS;
     while (counter) {
-      topRatedFilmContainer.insertAdjacentHTML(`beforeend`, getFilm(film.name, film.rating, film.year, film.duration, film.genre, film.imgPath, false, film.commentsAmount, false));
+      topRatedFilmContainer.insertAdjacentHTML(`beforeend`, getFilmCard(getFilm()));
       --counter;
     }
   }
