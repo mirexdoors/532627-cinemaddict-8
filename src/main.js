@@ -10,9 +10,9 @@ const filterValues = [`All movies`, `Watchlist`, `History`, `Favorites`, `Stats`
 const filmListContainer = document.querySelector(`.films-list__main`);
 const topRatedFilmContainer = document.querySelector(`.films-list__top`);
 const mostCommentedFilmContainer = document.querySelector(`.films-list__commented`);
-
-
-
+let films = []; // массив для хранения фильмов основоного списка
+let filmsCommented = [];
+let filmsRated = [];
 const randomInteger = (min, max) => {
   let rand = min - 0.5 + Math.random() * (max - min + 1);
   rand = Math.round(rand);
@@ -27,7 +27,28 @@ const onCLickFilter = () => {
     --filmAmount;
   }
 };
+const renderFilm = (film, container) => {
+  container.insertAdjacentHTML(`beforeend`, getFilmCard(film));
+};
+const createFilmsList = (amount) => {
+  const results = [];
+  while (amount) {
+    results.push(getFilm());
+    --amount;
+  }
+  return results;
+};
 
+const renderFilmList = (filmArray, container) => {
+  if (filmArray.length > 0 && container) {
+    filmArray.forEach(function (film) {
+      renderFilm(film, container);
+    });
+    return true;
+  } else {
+    return false;
+  }
+};
 document.addEventListener(`DOMContentLoaded`, function () {
   if (filterContainer) {
     filterValues.forEach(function (filterName) {
@@ -49,25 +70,14 @@ document.addEventListener(`DOMContentLoaded`, function () {
     });
   }
 
-  if (filmListContainer) {
-    let counter = TOTAL_FILMS;
-    while (counter) {
-      filmListContainer.insertAdjacentHTML(`beforeend`, getFilmCard(getFilm()));
-      --counter;
-    }
-  }
-  if (mostCommentedFilmContainer) {
-    let counter = MOST_COMMENTED_FILMS;
-    while (counter) {
-      mostCommentedFilmContainer.insertAdjacentHTML(`beforeend`, getFilmCard(getFilm()));
-      --counter;
-    }
-  }
-  if (topRatedFilmContainer) {
-    let counter = RATED_FILMS;
-    while (counter) {
-      topRatedFilmContainer.insertAdjacentHTML(`beforeend`, getFilmCard(getFilm()));
-      --counter;
-    }
-  }
+  // собираем фильмы в массивы для блоков фильмов
+  films = createFilmsList(TOTAL_FILMS);
+  filmsCommented = createFilmsList(MOST_COMMENTED_FILMS);
+  filmsRated = createFilmsList(RATED_FILMS);
+
+  // рендерим
+  renderFilmList(films, filmListContainer);
+  renderFilmList(filmsCommented, mostCommentedFilmContainer);
+  renderFilmList(filmsRated, topRatedFilmContainer);
+
 });
