@@ -1,6 +1,7 @@
+import getFilm from '../src/get-film.js';
 import getFilterElement from '../src/make-filter.js';
-import getFilm from '../src/make-film.js';
-
+import getFilmCard from '../src/make-film.js';
+import {randomInteger} from '../src/utls';
 const TOTAL_FILMS = 7;
 const RATED_FILMS = 2;
 const MOST_COMMENTED_FILMS = 2;
@@ -9,33 +10,46 @@ const filterValues = [`All movies`, `Watchlist`, `History`, `Favorites`, `Stats`
 const filmListContainer = document.querySelector(`.films-list__main`);
 const topRatedFilmContainer = document.querySelector(`.films-list__top`);
 const mostCommentedFilmContainer = document.querySelector(`.films-list__commented`);
+let films = []; // массив для хранения фильмов основоного списка
+let filmsCommented = [];
+let filmsRated = [];
 
-const film = {
-  name: `The Assassination Of Jessie James By The Coward Robert Ford`,
-  rating: `9.8`,
-  year: `2018`,
-  duration: `1h 13m`,
-  genre: `Comedy`,
-  imgPath: `./images/posters/three-friends.jpg`,
-  description: `A priest with a haunted past and a novice on the threshold of her final vows are sent by the Vatican to investigate the death of a young nun in Romania and confront a malevolent force in the form of a demonic nun.`,
-  commentsAmount: `13`
+const renderFilm = (film, container) => {
+  container.insertAdjacentHTML(`beforeend`, getFilmCard(film));
 };
+const onCLickFilter = (e) => {
+  document.querySelectorAll(`.js-setFilter`).forEach((filter)=> {
+    filter.classList.remove(`main-navigation__item--active`);
+  });
 
-const randomInteger = (min, max) => {
-  let rand = min - 0.5 + Math.random() * (max - min + 1);
-  rand = Math.round(rand);
-  return rand;
-};
-
-const onCLickFilter = () => {
+  e.target.classList.add(`main-navigation__item--active`);
   filmListContainer.innerHTML = ``;
-  let taskAmount = randomInteger(1, 5);
-  while (taskAmount) {
-    filmListContainer.insertAdjacentHTML(`beforeend`, getFilm(film.name, film.rating, film.year, film.duration, film.genre, film.imgPath, film.description, film.commentsAmount));
-    --taskAmount;
+  let filmAmount = randomInteger(1, 5);
+  while (filmAmount) {
+    renderFilm(getFilm(), filmListContainer);
+    --filmAmount;
   }
 };
 
+const createFilmsList = (amount) => {
+  const results = [];
+  while (amount) {
+    results.push(getFilm());
+    --amount;
+  }
+  return results;
+};
+
+const renderFilmList = (filmArray, container) => {
+  if (filmArray.length > 0 && container) {
+    filmArray.forEach(function (film) {
+      renderFilm(film, container);
+    });
+    return true;
+  } else {
+    return false;
+  }
+};
 document.addEventListener(`DOMContentLoaded`, function () {
   if (filterContainer) {
     filterValues.forEach(function (filterName) {
@@ -57,25 +71,14 @@ document.addEventListener(`DOMContentLoaded`, function () {
     });
   }
 
-  if (filmListContainer) {
-    let counter = TOTAL_FILMS;
-    while (counter) {
-      filmListContainer.insertAdjacentHTML(`beforeend`, getFilm(film.name, film.rating, film.year, film.duration, film.genre, film.imgPath, film.description, film.commentsAmount));
-      --counter;
-    }
-  }
-  if (mostCommentedFilmContainer) {
-    let counter = MOST_COMMENTED_FILMS;
-    while (counter) {
-      mostCommentedFilmContainer.insertAdjacentHTML(`beforeend`, getFilm(film.name, film.rating, film.year, film.duration, film.genre, film.imgPath, false, film.commentsAmount, false));
-      --counter;
-    }
-  }
-  if (topRatedFilmContainer) {
-    let counter = RATED_FILMS;
-    while (counter) {
-      topRatedFilmContainer.insertAdjacentHTML(`beforeend`, getFilm(film.name, film.rating, film.year, film.duration, film.genre, film.imgPath, false, film.commentsAmount, false));
-      --counter;
-    }
-  }
+  // собираем фильмы в массивы для блоков фильмов
+  films = createFilmsList(TOTAL_FILMS);
+  filmsCommented = createFilmsList(MOST_COMMENTED_FILMS);
+  filmsRated = createFilmsList(RATED_FILMS);
+
+  // рендерим
+  renderFilmList(films, filmListContainer);
+  renderFilmList(filmsCommented, mostCommentedFilmContainer);
+  renderFilmList(filmsRated, topRatedFilmContainer);
+
 });
