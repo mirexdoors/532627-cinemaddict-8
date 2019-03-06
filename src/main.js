@@ -1,7 +1,7 @@
 import getFilm from '../src/get-film.js';
 import getFilterElement from '../src/make-filter.js';
 import getFilmCard from '../src/make-film.js';
-
+import {randomInteger} from '../src/utls';
 const TOTAL_FILMS = 7;
 const RATED_FILMS = 2;
 const MOST_COMMENTED_FILMS = 2;
@@ -13,23 +13,24 @@ const mostCommentedFilmContainer = document.querySelector(`.films-list__commente
 let films = []; // массив для хранения фильмов основоного списка
 let filmsCommented = [];
 let filmsRated = [];
-const randomInteger = (min, max) => {
-  let rand = min - 0.5 + Math.random() * (max - min + 1);
-  rand = Math.round(rand);
-  return rand;
-};
 
-const onCLickFilter = () => {
-  filmListContainer.innerHTML = ``;
-  let filmAmount = randomInteger(1, 5);
-  while (filmAmount) {
-    filmListContainer.insertAdjacentHTML(`beforeend`, getFilmCard(getFilm()));
-    --filmAmount;
-  }
-};
 const renderFilm = (film, container) => {
   container.insertAdjacentHTML(`beforeend`, getFilmCard(film));
 };
+const onCLickFilter = (e) => {
+  document.querySelectorAll(`.js-setFilter`).forEach((filter)=> {
+    filter.classList.remove(`main-navigation__item--active`);
+  });
+
+  e.target.classList.add(`main-navigation__item--active`);
+  filmListContainer.innerHTML = ``;
+  let filmAmount = randomInteger(1, 5);
+  while (filmAmount) {
+    renderFilm(getFilm(), filmListContainer);
+    --filmAmount;
+  }
+};
+
 const createFilmsList = (amount) => {
   const results = [];
   while (amount) {
