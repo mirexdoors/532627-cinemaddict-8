@@ -1,7 +1,8 @@
-import {createElement} from '../src/utls.js';
+import Component from '../src/component';
 
-export class Film {
+export class Film extends Component {
   constructor(data) {
+    super();
     this._name = data.name;
     this._rating = data.rating;
     this._year = data.year;
@@ -11,7 +12,6 @@ export class Film {
     this._description = data.description;
     this._commentsAmount = data.commentsAmount;
     this._controls = data.controls;
-    this._element = null;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
   }
 
@@ -28,11 +28,6 @@ export class Film {
       .addEventListener(`click`, this._onEditButtonClick);
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
 
   get template() {
     let template = `<article class="film-card ${this._controls ? `` : `film-card--no-controls`}">
