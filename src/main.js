@@ -1,7 +1,9 @@
-import getFilm from '../src/get-film.js';
+import getFilm from '../src/data.js';
 import getFilterElement from '../src/make-filter.js';
-import getFilmCard from '../src/make-film.js';
+import {Film} from '../src/film';
+import {FilmPopup} from "./film-popup";
 import {randomInteger} from '../src/utls';
+
 const TOTAL_FILMS = 7;
 const RATED_FILMS = 2;
 const MOST_COMMENTED_FILMS = 2;
@@ -15,10 +17,17 @@ let filmsCommented = [];
 let filmsRated = [];
 
 const renderFilm = (film, container) => {
-  container.insertAdjacentHTML(`beforeend`, getFilmCard(film));
+  container.appendChild(film.render());
+  const filmPopup = new FilmPopup(getFilm());
+  film.onClick = () => {
+    document.body.appendChild(filmPopup.render());
+  };
+  filmPopup.onClick = () => {
+    document.body.removeChild(filmPopup.element);
+  };
 };
 const onCLickFilter = (e) => {
-  document.querySelectorAll(`.js-setFilter`).forEach((filter)=> {
+  document.querySelectorAll(`.js-setFilter`).forEach((filter) => {
     filter.classList.remove(`main-navigation__item--active`);
   });
 
@@ -26,7 +35,9 @@ const onCLickFilter = (e) => {
   filmListContainer.innerHTML = ``;
   let filmAmount = randomInteger(1, 5);
   while (filmAmount) {
-    renderFilm(getFilm(), filmListContainer);
+    const film = new Film(getFilm());
+    const filmPopup = new FilmPopup(getFilm());
+    renderFilm(film, filmPopup, filmListContainer);
     --filmAmount;
   }
 };
@@ -34,7 +45,8 @@ const onCLickFilter = (e) => {
 const createFilmsList = (amount) => {
   const results = [];
   while (amount) {
-    results.push(getFilm());
+    const film = new Film(getFilm());
+    results.push(film);
     --amount;
   }
   return results;
@@ -80,5 +92,4 @@ document.addEventListener(`DOMContentLoaded`, function () {
   renderFilmList(films, filmListContainer);
   renderFilmList(filmsCommented, mostCommentedFilmContainer);
   renderFilmList(filmsRated, topRatedFilmContainer);
-
 });

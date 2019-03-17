@@ -10,3 +10,8 @@ export const getRandomSentence = (text, sentenceAmountMin, sentenceAmountMax) =>
   shuffleArray(textArray);
   return textArray.slice(0, sentenceAmount).join(` `);
 };
+export const createElement = (template) => {
+  const newElement = document.createElement(`template`);
+  newElement.innerHTML = template;
+  return newElement.content.firstChild;
+};
