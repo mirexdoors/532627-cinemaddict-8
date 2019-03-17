@@ -36,8 +36,7 @@ const onCLickFilter = (e) => {
   let filmAmount = randomInteger(1, 5);
   while (filmAmount) {
     const film = new Film(getFilm());
-    const filmPopup = new FilmPopup(getFilm());
-    renderFilm(film, filmPopup, filmListContainer);
+    renderFilm(film, filmListContainer);
     --filmAmount;
   }
 };
