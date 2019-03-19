@@ -1,7 +1,8 @@
-import {createElement} from '../src/utls.js';
+import Component from '../src/component';
 
-export class FilmPopup {
+export class FilmPopup extends Component {
   constructor(data) {
+    super();
     this._name = data.name;
     this._rating = data.rating;
     this._year = data.year;
@@ -10,7 +11,6 @@ export class FilmPopup {
     this._img = data.img;
     this._description = data.description;
     this._commentsAmount = data.commentsAmount;
-    this._element = null;
     this._director = data.director;
     this._actors = data.actors;
     this._ageLimit = data.ageLimit;
@@ -20,10 +20,6 @@ export class FilmPopup {
     this._country = data.country;
 
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
-  }
-
-  get element() {
-    return this._element;
   }
 
   _onCloseButtonClick() {
@@ -37,12 +33,6 @@ export class FilmPopup {
   bind() {
     this._element.querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, this._onCloseButtonClick);
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
   }
 
   get template() {
