@@ -1,4 +1,8 @@
 import Component from '../src/component';
+import moment from 'moment';
+
+const ENTER = 13;
+const ESCAPE = 27;
 
 export class FilmPopup extends Component {
   constructor(data) {
@@ -18,6 +22,9 @@ export class FilmPopup extends Component {
     this._writers = data.writers;
     this._release = data.release;
     this._country = data.country;
+    this._comment = data.comment;
+    this._commentsAmount = data.comment;
+    this._commentDate = data.commentDate;
 
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
   }
@@ -26,8 +33,63 @@ export class FilmPopup extends Component {
     return typeof this._onClick === `function` && this._onClick();
   }
 
+  _onEscapeClick(e) {
+    return e.keyCode === ESCAPE && typeof this._onClick === `function` && this._onClick();
+  }
+
+  _processForm(formData) {
+    const entry = {
+      isWatchlist: this._isWatchlist,
+      isWatched: this._isWatched,
+      isFavorite: this._isFavorite,
+      comment: this._comment,
+      score: ``,
+    };
+
+    const filmMapper = FilmPopup.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+      if (filmMapper[property]) {
+        filmMapper[property](value);
+      }
+    }
+
+    return entry;
+  }
+
+  static createMapper(target) {
+    return {
+      watchlist: (value) => (target.isWatchlist = value),
+      watched: (value) => (target.isWatched = value),
+      favorite: (value) => (target.isFavorite = value),
+      comment: (value) => (target.comment.add(value)),
+      score: (value) => (target.score = parseInt(value, 10))
+    };
+  }
+
+  _onCtrlEnterPress(e) {
+    if (e.keyCode === ENTER && e.ctrlKey) {
+      const formData = new FormData(this._element.querySelector(`.film-details__inner`));
+      const newData = this._processForm(formData);
+      if (typeof this._onSubmit === `function`) {
+        this._onSubmit(newData);
+      }
+
+      this.update(newData);
+    }
+  }
+
   set onClick(fn) {
     this._onClick = fn;
+  }
+
+  update(data) {
+    this._isWatchlist = data.isWatchlist === `on`;
+    this._isWatched = data.isWatched === `on`;
+    this._isFavorite = data.isFavorite === `on`;
+    this._comment = data.comment;
+    this._score = data.score;
   }
 
   bind() {
@@ -76,11 +138,11 @@ export class FilmPopup extends Component {
 </tr>
 <tr class="film-details__row">
   <td class="film-details__term">Release Date</td>
-<td class="film-details__cell">${this._release}</td>
+<td class="film-details__cell">${moment(this._release).format(`DD MMMM YYYY`)}</td>
 </tr>
 <tr class="film-details__row">
   <td class="film-details__term">Runtime</td>
-  <td class="film-details__cell">${this._duration}</td>
+  <td class="film-details__cell">${moment.duration({"minutes": this._duration}).hours()}h&nbsp;${moment.duration({"minutes": this._duration}).minutes()}m</td>
 </tr>
 <tr class="film-details__row">
   <td class="film-details__term">Country</td>
@@ -90,8 +152,8 @@ export class FilmPopup extends Component {
   <td class="film-details__term">Genres</td>
   <td class="film-details__cell">
   ${this._genres.map(function (genre) {
-    return `<span class="film-details__genre">${genre}</span>`;
-  })}
+      return `<span class="film-details__genre">${genre}</span>`;
+    })}
   </td>
 </tr>
 </table>
@@ -120,10 +182,10 @@ export class FilmPopup extends Component {
   <li class="film-details__comment">
   <span class="film-details__comment-emoji">😴</span>
 <div>
-<p class="film-details__comment-text">So long-long story, boring!</p>
+<p class="film-details__comment-text">${this._comment}</p>
 <p class="film-details__comment-info">
   <span class="film-details__comment-author">Tim Macoveev</span>
-<span class="film-details__comment-day">3 days ago</span>
+<span class="film-details__comment-day">${moment(this._commentDate).endOf(`day`).fromNow()}</span>
 </p>
 </div>
 </li>

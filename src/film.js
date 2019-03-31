@@ -1,4 +1,5 @@
 import Component from '../src/component';
+import moment from 'moment';
 
 export class Film extends Component {
   constructor(data) {
@@ -34,8 +35,8 @@ export class Film extends Component {
           <h3 class="film-card__title">${this._name}</h3>
           <p class="film-card__rating">${this._rating}</p>
           <p class="film-card__info">
-            <span class="film-card__year">${this._year}</span>
-            <span class="film-card__duration">${this._duration}</span>
+            <span class="film-card__year">${moment(this._year).format(`YYYY`)}</span>
+            <span class="film-card__duration">${moment.duration({"minutes": this._duration}).hours()}h&nbsp;${moment.duration({"minutes": this._duration}).minutes()}m</span>
             <span class="film-card__genre">${this._genres[0]}</span>
           </p>
           <img src="${this._img}" alt="" class="film-card__poster">`;
