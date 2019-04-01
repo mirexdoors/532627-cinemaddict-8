@@ -7,7 +7,6 @@ export default () => {
   const names = [`великий`, `красный`, `енот`, `компьютер`];
   const posters = [`accused`, `blackmail`, `blue-blazes`, `fuga-da-new-york`, `moonrise`, `three-friends`];
   const genres = [`drama`, `comedy`, `biopic`];
-  const commentWords = [`amazing`, `boring`, `film`, `brilliant`];
   const name = shuffleArray(names).join(` `);
   const rating = randomInteger(1, 10);
   const year = randomInteger(-32432423424, 222222222019);
@@ -23,8 +22,12 @@ export default () => {
   const director = `Francis Ford Coppola`;
   const actors = [`Brad Pitt`, `Charlie Chaplin`];
   const ageLimit = `18+`;
-  const comment = shuffleArray(commentWords).join(` `);
+  const score = randomInteger(1, 9);
+  const comment = ``;
   const commentDate = new Date() - randomInteger(3, 30) * 86400000;
+  const isInWatchlist = false;
+  const isWatched = false;
+  const isFavorite = false;
   const film = {
     name,
     ageLimit,
@@ -43,7 +46,11 @@ export default () => {
     writers,
     comment,
     commentDate,
-    commentsAmount
+    commentsAmount,
+    score,
+    isInWatchlist,
+    isWatched,
+    isFavorite
   };
   return film;
 };

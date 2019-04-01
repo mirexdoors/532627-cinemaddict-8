@@ -13,7 +13,12 @@ export class Film extends Component {
     this._description = data.description;
     this._commentsAmount = data.commentsAmount;
     this._controls = data.controls;
+    this._onClick = null;
+    this._isInWatchlist = data.isWatchlist;
+    this._isWatched = data.isWatched;
+    this._isFavorite = data.isFavorite;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
+
   }
 
   _onEditButtonClick() {
@@ -28,7 +33,17 @@ export class Film extends Component {
     this._element.querySelector(`.film-card__comments`)
       .addEventListener(`click`, this._onEditButtonClick);
   }
-
+  unbind() {
+    this._element.querySelector(`button.film-card__comments`)
+      .removeEventListener(`click`, this._onEditButtonClick);
+  }
+  update(data) {
+    this._isInWatchlist = data.isInWatchlist;
+    this._isWatched = data.isWatched;
+    this._isFavorite = data.isFavorite;
+    this._comment = data.comment;
+    this._score = data.score;
+  }
 
   get template() {
     let template = `<article class="film-card ${this._controls ? `` : `film-card--no-controls`}">

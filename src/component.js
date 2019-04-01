@@ -22,6 +22,12 @@ export default class Component {
     return this._element;
   }
 
-  bind() {
+  unrender() {
+    this.unbind();
+    this._element.remove();
+    this._element = null;
   }
+
+  bind() {}
+  unbind() {}
 }
