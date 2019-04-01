@@ -9,19 +9,25 @@ export default () => {
   const genres = [`drama`, `comedy`, `biopic`];
   const name = shuffleArray(names).join(` `);
   const rating = randomInteger(1, 10);
-  const year = randomInteger(1905, 2019);
+  const year = randomInteger(-32432423424, 222222222019);
   const description = getRandomSentence(DESCRIPTION_SENTENCE, DESCRIPTION_SENTENCE_AMOUNT_MIN, DESCRIPTION_SENTENCE_AMOUNT_MAX);
   const img = `./images/posters/` + posters[Math.floor(Math.random() * 6)] + `.jpg`;
   const controls = true;
-  const duration = `2h 13min`;
+  const duration = randomInteger(15, 180);
   const original = shuffleArray(names).join(` `);
   const writers = new Set([`Billy Joe`, `Elvis Presley`]);
   const commentsAmount = randomInteger(1, 500);
-  const release = `15 June 2018 (USA)`;
+  const release = new Date(randomInteger(1949, 2019), 11, 31);
   const country = `USA`;
   const director = `Francis Ford Coppola`;
   const actors = [`Brad Pitt`, `Charlie Chaplin`];
   const ageLimit = `18+`;
+  const score = randomInteger(1, 9);
+  const comment = ``;
+  const commentDate = new Date() - randomInteger(3, 30) * 86400000;
+  const isInWatchlist = false;
+  const isWatched = false;
+  const isFavorite = false;
   const film = {
     name,
     ageLimit,
@@ -38,7 +44,13 @@ export default () => {
     country,
     release,
     writers,
-    commentsAmount
+    comment,
+    commentDate,
+    commentsAmount,
+    score,
+    isInWatchlist,
+    isWatched,
+    isFavorite
   };
   return film;
 };

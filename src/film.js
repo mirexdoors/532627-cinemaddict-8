@@ -1,4 +1,5 @@
 import Component from '../src/component';
+import moment from 'moment';
 
 export class Film extends Component {
   constructor(data) {
@@ -12,7 +13,12 @@ export class Film extends Component {
     this._description = data.description;
     this._commentsAmount = data.commentsAmount;
     this._controls = data.controls;
+    this._onClick = null;
+    this._isInWatchlist = data.isWatchlist;
+    this._isWatched = data.isWatched;
+    this._isFavorite = data.isFavorite;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
+
   }
 
   _onEditButtonClick() {
@@ -27,15 +33,25 @@ export class Film extends Component {
     this._element.querySelector(`.film-card__comments`)
       .addEventListener(`click`, this._onEditButtonClick);
   }
-
+  unbind() {
+    this._element.querySelector(`button.film-card__comments`)
+      .removeEventListener(`click`, this._onEditButtonClick);
+  }
+  update(data) {
+    this._isInWatchlist = data.isInWatchlist;
+    this._isWatched = data.isWatched;
+    this._isFavorite = data.isFavorite;
+    this._comment = data.comment;
+    this._score = data.score;
+  }
 
   get template() {
     let template = `<article class="film-card ${this._controls ? `` : `film-card--no-controls`}">
           <h3 class="film-card__title">${this._name}</h3>
           <p class="film-card__rating">${this._rating}</p>
           <p class="film-card__info">
-            <span class="film-card__year">${this._year}</span>
-            <span class="film-card__duration">${this._duration}</span>
+            <span class="film-card__year">${moment(this._year).format(`YYYY`)}</span>
+            <span class="film-card__duration">${moment.duration({"minutes": this._duration}).hours()}h&nbsp;${moment.duration({"minutes": this._duration}).minutes()}m</span>
             <span class="film-card__genre">${this._genres[0]}</span>
           </p>
           <img src="${this._img}" alt="" class="film-card__poster">`;

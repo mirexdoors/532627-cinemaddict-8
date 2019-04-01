@@ -22,8 +22,18 @@ const renderFilm = (film, container) => {
   film.onClick = () => {
     document.body.appendChild(filmPopup.render());
   };
-  filmPopup.onClick = () => {
-    document.body.removeChild(filmPopup.element);
+  filmPopup.onCloseButtonClick = () => {
+    filmPopup.unrender();
+  };
+
+  filmPopup.onSubmit = (newObject) => {
+    film.isInWatchlist = newObject.isInWatchlist === `on`;
+    film.isWatched = newObject.isWatched === `on`;
+    film.isFavorite = newObject.isFavorite === `on`;
+    film.comment = newObject.comment;
+    film.score = newObject.score;
+    film.update(newObject);
+    filmPopup.unrender();
   };
 };
 const onCLickFilter = (e) => {
