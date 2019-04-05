@@ -26,11 +26,13 @@ export class FilmPopup extends Component {
     this._commentsAmount = data.comment;
     this._commentDate = data.commentDate;
     this._score = data.score;
-    this._isInWatchlist = data.isWatchlist;
+    this._isInWatchlist = data.isInWatchlist;
     this._isWatched = data.isWatched;
     this._isFavorite = data.isFavorite;
     this._onClick = null;
     this._onSubmit = null;
+    this._onAddToWatchList = null;
+    this._onMarkAsWatched = null;
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
     this._onEscapeClick = this._onEscapeClick.bind(this);
     this._onCtrlEnterPress = this._onCtrlEnterPress.bind(this);
@@ -46,7 +48,7 @@ export class FilmPopup extends Component {
 
   _processForm(formData) {
     const entry = {
-      isInWatchlist: this._isInWatchlistWatchlist,
+      isInWatchlist: this._isInWatchlist,
       isWatched: this._isWatched,
       isFavorite: this._isFavorite,
       comment: this._comment,
@@ -92,15 +94,17 @@ export class FilmPopup extends Component {
   set onClick(fn) {
     this._onClick = fn;
   }
+
   set onCloseButtonClick(fn) {
     this._onClick = fn;
   }
+
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
 
   update(data) {
-    this._isInWatchlistWatchlist = data.isWatchlist === `on`;
+    this._isInWatchlist = data.isInWatchlist === `on`;
     this._isWatched = data.isWatched === `on`;
     this._isFavorite = data.isFavorite === `on`;
     this._comment = data.comment;
@@ -113,12 +117,14 @@ export class FilmPopup extends Component {
     this._element.querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, this._onCloseButtonClick);
   }
+
   unbind() {
     document.removeEventListener(`keydown`, this._onEscapeClick);
     document.removeEventListener(`keydown`, this._onCtrlEnterPress);
     this._element.querySelector(`.film-details__close-btn`)
       .removeEventListener(`click`, this._onCloseButtonClick);
   }
+
   get template() {
     return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -188,12 +194,14 @@ export class FilmPopup extends Component {
 
 <section class="film-details__controls">
   <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this._isInWatchlist ? `checked` : ``}>
-    <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-  
-  <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${this._isWatched ? `checked` : ``}>
-    <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
+    <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">${ this._isInWatchlist ? `
+  Already in watchlist` : `Add to watchlist` }</label>
     
-    <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite ? `checked` : ``}>
+    <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${this._isWatched ? `checked` : ``}>
+    <label for="watched" class="film-details__control-label film-details__control-label--watched">${ this._isWatched ? `
+  Already in watched` : `Add to watched` }</label>
+      
+      <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite ? `checked` : ``}>
         <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
       </section>
       

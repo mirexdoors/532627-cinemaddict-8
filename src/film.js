@@ -14,17 +14,40 @@ export class Film extends Component {
     this._commentsAmount = data.commentsAmount;
     this._controls = data.controls;
     this._onClick = null;
-    this._isInWatchlist = data.isWatchlist;
+    this._isInWatchlist = data.isInWatchlist;
     this._isWatched = data.isWatched;
     this._isFavorite = data.isFavorite;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
+    this._onAddToWatchListClick = this._onAddToWatchListClick.bind(this);
+    this._onMarkAsWatchedClick = this._onMarkAsWatchedClick.bind(this);
+  }
+  _onMarkAsWatchedClick(e) {
+    e.preventDefault();
 
+    if (typeof this._onMarkAsWatched === `function`) {
+      const newData = {isWatched: !this._isWatched};
+      this._onMarkAsWatched(newData);
+    }
   }
 
+  _onAddToWatchListClick(e) {
+    e.preventDefault();
+
+    if (typeof this._onAddToWatchList === `function`) {
+      const newData = {isInWatchList: !this.isInWatchList};
+      this._onAddToWatchList(newData);
+    }
+  }
   _onEditButtonClick() {
     return typeof this._onClick === `function` && this._onClick();
   }
+  set onAddToWatchList(fn) {
+    this._onAddToWatchList = fn;
+  }
 
+  set onMarkAsWatched(fn) {
+    this._onMarkAsWatched = fn;
+  }
   set onClick(fn) {
     this._onClick = fn;
   }
@@ -32,11 +55,20 @@ export class Film extends Component {
   bind() {
     this._element.querySelector(`.film-card__comments`)
       .addEventListener(`click`, this._onEditButtonClick);
+    this._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, this._onAddToWatchListClick);
+    this._element.querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, this._onMarkAsWatchedClick);
   }
   unbind() {
     this._element.querySelector(`button.film-card__comments`)
       .removeEventListener(`click`, this._onEditButtonClick);
+    this._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .removeEventListener(`click`, this._onAddToWatchListClick);
+    this._element.querySelector(`.film-card__controls-item--mark-as-watched`)
+      .removeEventListener(`click`, this._onMarkAsWatchedClick);
   }
+
   update(data) {
     this._isInWatchlist = data.isInWatchlist;
     this._isWatched = data.isWatched;
@@ -63,10 +95,12 @@ export class Film extends Component {
 
     if (this._controls) {
       template += `<form class="film-card__controls">
-            <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist"><!--Add to watchlist--> WL</button>
-            <button class="film-card__controls-item button film-card__controls-item--mark-as-watched"><!--Mark as watched-->WTCHD</button>
-            <button class="film-card__controls-item button film-card__controls-item--favorite"><!--Mark as favorite-->FAV</button>
-          </form>`;
+            <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${this._isInWatchlist && `
+    film-card__controls-item--active`}"><!--Add to watchlist--> WL</button>
+                <button class="film-card__controls-item button film-card__controls-item--mark-as-watched  ${this._isWatched && `
+    film-card__controls-item--active`}" ><!--Mark as watched-->WTCHD</button>
+                <button class="film-card__controls-item button film-card__controls-item--favorite"><!--Mark as favorite-->FAV</button>
+              </form>`;
     }
     template += `</article>`;
     return template;

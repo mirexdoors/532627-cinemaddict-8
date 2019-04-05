@@ -1,11 +1,24 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import moment from 'moment';
+import Component from "./component";
 
 const statisticCtx = document.querySelector(`.statistic__chart`);
 // Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
 const BAR_HEIGHT = 50;
 statisticCtx.height = BAR_HEIGHT * 5;
-export default () => {
+export default class Statistic extends Component {
+  constructor(data) {
+    super();
+    this._films = data;
+    this._chart = null;
+  }
+
+  get _genres() {
+    return [...new Set(this._films.map((film) => film.genre))];
+  }
+
+
   const myChart = new Chart(statisticCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
@@ -62,5 +75,4 @@ export default () => {
       }
     }
   });
-  return myChart;
 };

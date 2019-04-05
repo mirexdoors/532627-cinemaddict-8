@@ -26,9 +26,17 @@ const renderFilm = (film, container) => {
     filmPopup.unrender();
   };
 
+  film.onAddToWatchList = () => {
+    film.isInWatchlist = !film.isInWatchlist;
+    filmPopup.update();
+  };
+
+  film._onMarkAsWatched = () => {
+    film.isWatched = !film.isWatched;
+    filmPopup.update();
+  };
+
   filmPopup.onSubmit = (newObject) => {
-    film.isInWatchlist = newObject.isInWatchlist === `on`;
-    film.isWatched = newObject.isWatched === `on`;
     film.isFavorite = newObject.isFavorite === `on`;
     film.comment = newObject.comment;
     film.score = newObject.score;
